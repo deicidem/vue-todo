@@ -15,13 +15,16 @@ export const store = new Vuex.Store({
   },
   mutations: {
     add(state, value) {
-      state.list.push({value});
+      state.list.push({value, done: false});
     },
     remove(state, index) {
       state.list.splice(index, 1);
     },
     edit(state, data) {
       state.list[data.index].value = data.value;
+    },
+    done(state, data) {
+      state.list[data.index].done = data.value;
     }
   },
   actions: {
@@ -33,6 +36,10 @@ export const store = new Vuex.Store({
     },
     edit(store, data) {
       store.commit('edit', data);
+    },
+    done(store, data) {
+      store.commit('done', data);
     }
+
   }
 });

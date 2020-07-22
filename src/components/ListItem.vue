@@ -1,8 +1,8 @@
 <template>
-<li class="list-item" @click.prevent="done = !done">
-  <span :class="cross" v-if="!isEditing">{{text}}</span>
+<li class="list-item" @click.prevent="onDone">
+  <span :class="cross" v-if="!isEditing">{{info.value}}</span>
   <form class="form" @submit.prevent="onSubmit" v-else>
-    <input type="text" v-model="newText" class="form-control">
+    <input type="text" :value="info.value" @input="onInput" class="form-control">
   </form>
   <div class="list">
     <button class="btn btn-primary" type="button" @click="edit">Edit</button>
@@ -14,26 +14,33 @@
 <script>
 export default {
   props: {
-    text: String
+    info: Object
   },
   data() {
     return {
       isEditing: false,
-      newText: this.text,
-      done: false
     }
   },
   computed: {
     cross() {
-      return this.done ? 'cross' : '';
+      return this.info.done ? 'cross' : '';
     }
   },
   methods: {
+    onInput(e) {
+      this.$emit('edit', e.target.value);
+    },
     remove() {
       this.$emit('remove')
+      this.isEditing = false;
     },
     edit() {
       this.isEditing = true
+    },
+    onDone(e) {
+      if (e.target.tagName !== 'BUTTON' && !this.isEditing) {
+        this.$emit('done', !this.info.done)
+      }
     },
     clickOutside(e) {
       if (!this.$el.contains(e.target) && this.isEditing) {
@@ -41,7 +48,6 @@ export default {
       }
     },
     onSubmit() {
-      this.$emit('edit', this.newText);
       this.isEditing = false;
     }
   },

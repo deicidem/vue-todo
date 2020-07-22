@@ -5,8 +5,9 @@
         v-for="(item, index) in list"
         :key="index"
         class="list-group-item"
-        :text="item.value"
-        @remove="remove()"
+        :info="item"
+        @done="done({index, value: $event})"
+        @remove="remove(index)"
         @edit="edit({index, value: $event})"
         >
 
@@ -26,7 +27,7 @@ export default {
     ListItem
   },
   methods: {
-    ...mapActions(['edit', 'remove'])
+    ...mapActions(['edit', 'remove', 'done'])
   }
 }
 </script>
